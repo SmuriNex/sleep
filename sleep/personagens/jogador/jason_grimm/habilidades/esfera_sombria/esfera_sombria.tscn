@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://c7nre5pqdfoas"]
+
+[ext_resource type="Script" uid="uid://cdhi43nhp0ma2" path="res://personagens/jogador/jason_grimm/habilidades/lamina_sombra/lamina_sombra.gd" id="1_m2u07"]
+[ext_resource type="Texture2D" uid="uid://ckbg5sbck8yr8" path="res://addons/kenney_particle_pack/circle_03.png" id="2_06ne6"]
+[ext_resource type="Texture2D" uid="uid://doecc83rghj2x" path="res://addons/kenney_particle_pack/light_01.png" id="3_18waq"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ai6mr"]
+radius = 0.45
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_53pjy"]
+gravity = Vector3(0, 0, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yjr6u"]
+transparency = 1
+albedo_color = Color(0.14117648, 0, 0.27450982, 1)
+albedo_texture = ExtResource("2_06ne6")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_2ukr0"]
+material = SubResource("StandardMaterial3D_yjr6u")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u1msq"]
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vx2ty"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("3_18waq")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_sjtng"]
+material = SubResource("StandardMaterial3D_vx2ty")
+
+[node name="LaminaSombra" type="Area3D" unique_id=1572797670]
+script = ExtResource("1_m2u07")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=616251642]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.21268222, 0)
+shape = SubResource("SphereShape3D_ai6mr")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=847779954]
+amount = 20
+lifetime = 0.17
+process_material = SubResource("ParticleProcessMaterial_53pjy")
+draw_pass_1 = SubResource("QuadMesh_2ukr0")
+
+[node name="nucleo" type="GPUParticles3D" parent="." unique_id=216528989]
+amount = 1
+lifetime = 0.09999999999999999
+process_material = SubResource("ParticleProcessMaterial_u1msq")
+draw_pass_1 = SubResource("QuadMesh_sjtng")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

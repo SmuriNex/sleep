@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://b2qlob65ksoj7"]
+
+[ext_resource type="Script" uid="uid://cgkb1n3af4l6k" path="res://objetos_interativos/quebraveis/boneco_treino.gd" id="1_cus5a"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nty2b"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cus5a"]
+radius = 0.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_toqvm"]
+
+[node name="BonecoTreino" type="StaticBody3D" unique_id=1520755341 groups=["inimigo", "interagivel"]]
+script = ExtResource("1_cus5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=303857008]
+mesh = SubResource("CapsuleMesh_nty2b")
+
+[node name="HurtboxInimigo" type="Area3D" parent="." unique_id=13423233 groups=["inimigo"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxInimigo" unique_id=845252343]
+shape = SubResource("CapsuleShape3D_cus5a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1957244232]
+shape = SubResource("CapsuleShape3D_toqvm")

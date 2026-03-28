@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bwdjeqocqcmtw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_quihs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nik7f"]
+
+[node name="CaixaPesada" type="RigidBody3D" unique_id=1674324174 groups=["caixa"]]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 200.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1130487335]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0)
+mesh = SubResource("BoxMesh_quihs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=83575652]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0)
+shape = SubResource("BoxShape3D_nik7f")

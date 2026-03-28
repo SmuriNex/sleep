@@ -1,0 +1,530 @@
+[gd_scene format=3 uid="uid://bdnhmadqv8iuk"]
+
+[ext_resource type="Script" uid="uid://bbq6ochkwnj8c" path="res://personagens/jogador/jason_grimm/scripts/jason_grimm.gd" id="1_b61ng"]
+[ext_resource type="PackedScene" uid="uid://d2m43up7gkynt" path="res://personagens/jogador/jason_grimm/modelos/jason.fbx" id="2_fsanx"]
+[ext_resource type="Animation" uid="uid://dv5f5ldu5mev6" path="res://personagens/jogador/jason_grimm/animacoes/recursos/andar/andar.res" id="3_5557x"]
+[ext_resource type="Animation" uid="uid://bd3ak1nuri7rh" path="res://personagens/jogador/jason_grimm/animacoes/recursos/quadrado/chute1.res" id="4_sxewm"]
+[ext_resource type="Animation" uid="uid://dlouxaxc3pto4" path="res://personagens/jogador/jason_grimm/animacoes/recursos/quadrado/chute2.res" id="5_um62t"]
+[ext_resource type="Animation" uid="uid://ck22d4obk2fbi" path="res://personagens/jogador/jason_grimm/animacoes/recursos/dash/dash.res" id="6_u1tba"]
+[ext_resource type="Animation" uid="uid://bqx1fnyoklcpk" path="res://personagens/jogador/jason_grimm/animacoes/recursos/bola/grito.res" id="7_nxm6o"]
+[ext_resource type="Animation" uid="uid://cutgjrqx2dxa8" path="res://personagens/jogador/jason_grimm/animacoes/recursos/X/jump.res" id="8_6v101"]
+[ext_resource type="Animation" uid="uid://c5esrlg36vx6l" path="res://personagens/jogador/jason_grimm/animacoes/recursos/empurrar/empurrar.res" id="8_stacp"]
+[ext_resource type="Animation" uid="uid://b27a6sf3rkgci" path="res://personagens/jogador/jason_grimm/animacoes/recursos/triangulo/lamina.res" id="9_p3wyv"]
+[ext_resource type="Animation" uid="uid://b8jdfpqqm7fip" path="res://personagens/jogador/jason_grimm/animacoes/recursos/parado/parado.res" id="10_stacp"]
+[ext_resource type="Animation" uid="uid://cwr6oiiad2jw" path="res://personagens/jogador/jason_grimm/animacoes/recursos/quadrado/soco.res" id="11_76n0u"]
+[ext_resource type="Animation" uid="uid://cpj6ung5bxp1y" path="res://personagens/jogador/jason_grimm/animacoes/recursos/quadrado/soco1.res" id="12_o3lll"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="13_2vajh"]
+[ext_resource type="Animation" uid="uid://dvgcuqiv82gw7" path="res://personagens/jogador/jason_grimm/animacoes/recursos/pendurado/pendurar.res" id="13_76n0u"]
+[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="14_i7cms"]
+[ext_resource type="Animation" uid="uid://dt275sp7ujvia" path="res://personagens/jogador/jason_grimm/animacoes/recursos/pendurado/pradireita.res" id="14_o3lll"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="15_0cvoj"]
+[ext_resource type="Animation" uid="uid://bxwa6uxkycgp3" path="res://personagens/jogador/jason_grimm/animacoes/recursos/pendurado/praesquerda.res" id="15_51ce1"]
+[ext_resource type="PackedScene" uid="uid://blronus3cj6vg" path="res://personagens/jogador/jason_grimm/ui/hud/hud.tscn" id="16_hm5l3"]
+[ext_resource type="Animation" uid="uid://dtqsf2c5lvffp" path="res://personagens/jogador/jason_grimm/animacoes/recursos/pendurado/soltar.res" id="18_hroa6"]
+[ext_resource type="Animation" uid="uid://dyjhyluyjjn6d" path="res://personagens/jogador/jason_grimm/animacoes/recursos/pendurado/subir.res" id="19_eg3va"]
+[ext_resource type="Animation" uid="uid://dopy2jn6inu1m" path="res://personagens/jogador/jason_grimm/animacoes/recursos/danos/tomardano.res" id="20_5k1qw"]
+[ext_resource type="Animation" uid="uid://0dqcfu0ejs0v" path="res://personagens/jogador/jason_grimm/animacoes/recursos/danos/morte.res" id="21_0g2nb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_722wk"]
+albedo_color = Color(0, 0.116735585, 4.2114408e-08, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ns8bw"]
+albedo_color = Color(0, 0, 0.21568628, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5kls"]
+albedo_color = Color(0, 0, 0.21568628, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sj37a"]
+albedo_color = Color(1, 0.72758305, 0.48255527, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8psmr"]
+albedo_color = Color(1, 0.7294118, 0.48235294, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhbem"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_s7pee"]
+radius = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_b3032"]
+radius = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lf1hk"]
+radius = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_5557x"]
+radius = 0.25
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_51ce1"]
+_data = {
+&"andar": ExtResource("3_5557x"),
+&"chute1": ExtResource("4_sxewm"),
+&"chute2": ExtResource("5_um62t"),
+&"dash": ExtResource("6_u1tba"),
+&"empurrar": ExtResource("8_stacp"),
+&"grito": ExtResource("7_nxm6o"),
+&"jump": ExtResource("8_6v101"),
+&"lamina": ExtResource("9_p3wyv"),
+&"morte": ExtResource("21_0g2nb"),
+&"parado": ExtResource("10_stacp"),
+&"pendurar": ExtResource("13_76n0u"),
+&"pradireita": ExtResource("14_o3lll"),
+&"praesquerda": ExtResource("15_51ce1"),
+&"soco": ExtResource("11_76n0u"),
+&"soco1": ExtResource("12_o3lll"),
+&"soltar": ExtResource("18_hroa6"),
+&"subir": ExtResource("19_eg3va"),
+&"tomardano": ExtResource("20_5k1qw")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6e8hq"]
+animation = &"jason/andar"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_b3032"]
+animation = &"jason/chute1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lf1hk"]
+animation = &"jason/chute2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_heovp"]
+animation = &"jason/dash"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x1iqu"]
+animation = &"jason/empurrar"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5557x"]
+animation = &"jason/grito"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mcj4p"]
+animation = &"jason/jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_s7pee"]
+animation = &"jason/lamina"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8w04c"]
+animation = &"jason/morte"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_p8s7w"]
+animation = &"jason/parado"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_378mj"]
+animation = &"jason/pendurar"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wnies"]
+animation = &"jason/pradireita"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fk8mr"]
+animation = &"jason/praesquerda"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_k61lj"]
+animation = &"jason/soco"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a7pth"]
+animation = &"jason/soco1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_gunby"]
+animation = &"jason/soltar"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0jwnp"]
+animation = &"jason/subir"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u2esc"]
+animation = &"jason/tomardano"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4qhsj"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_00u2c"]
+advance_mode = 2
+advance_condition = &"is_moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_awefa"]
+advance_mode = 2
+advance_condition = &"on_floor"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bm0aj"]
+advance_mode = 2
+advance_condition = &"is_jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r3ihb"]
+advance_mode = 2
+advance_condition = &"is_jumping"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w6clq"]
+advance_mode = 2
+advance_condition = &"is_idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_b3032"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lf1hk"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_heovp"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rfk1q"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6e8hq"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mcj4p"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_p8s7w"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jj4oi"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c58lc"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ca6pf"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_s7pee"]
+xfade_time = 0.1
+switch_mode = 2
+advance_mode = 2
+advance_condition = &"vai_chute2"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_k61lj"]
+xfade_time = 0.1
+switch_mode = 2
+advance_mode = 2
+advance_condition = &"vai_soco3"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a7pth"]
+xfade_time = 0.1
+switch_mode = 2
+advance_mode = 2
+advance_condition = &"vai_chute4"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ihqsq"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wi0rm"]
+advance_mode = 2
+advance_condition = &"is_moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rqtmn"]
+advance_mode = 2
+advance_condition = &"is_idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n6m46"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sxewm"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_um62t"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_diii6"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i5dwj"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1ucex"]
+switch_mode = 2
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8jjrd"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_33286"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ypyfj"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_oh8uc"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_exbsy"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jgo6s"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x2gd0"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hi3iy"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_m8rte"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n6h1t"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y7ret"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_c58lc"]
+states/jason_andar/node = SubResource("AnimationNodeAnimation_6e8hq")
+states/jason_andar/position = Vector2(629, 81)
+states/jason_chute1/node = SubResource("AnimationNodeAnimation_b3032")
+states/jason_chute1/position = Vector2(918, -75)
+states/jason_chute2/node = SubResource("AnimationNodeAnimation_lf1hk")
+states/jason_chute2/position = Vector2(530, -75)
+states/jason_dash/node = SubResource("AnimationNodeAnimation_heovp")
+states/jason_dash/position = Vector2(766, 198)
+states/jason_empurrar/node = SubResource("AnimationNodeAnimation_x1iqu")
+states/jason_empurrar/position = Vector2(1087, 48)
+states/jason_invocar_sombras/node = SubResource("AnimationNodeAnimation_5557x")
+states/jason_invocar_sombras/position = Vector2(198, 195)
+states/jason_jump/node = SubResource("AnimationNodeAnimation_mcj4p")
+states/jason_jump/position = Vector2(477, 198)
+states/jason_lamina/node = SubResource("AnimationNodeAnimation_s7pee")
+states/jason_lamina/position = Vector2(200, 7)
+states/jason_morte/node = SubResource("AnimationNodeAnimation_8w04c")
+states/jason_morte/position = Vector2(94, -231)
+states/jason_parado/node = SubResource("AnimationNodeAnimation_p8s7w")
+states/jason_parado/position = Vector2(365, 100)
+states/jason_pendurar/node = SubResource("AnimationNodeAnimation_378mj")
+states/jason_pendurar/position = Vector2(107, 272.12555)
+states/jason_pradireita/node = SubResource("AnimationNodeAnimation_wnies")
+states/jason_pradireita/position = Vector2(118.82239, 358.12555)
+states/jason_praesquerda/node = SubResource("AnimationNodeAnimation_fk8mr")
+states/jason_praesquerda/position = Vector2(318.1776, 353.12555)
+states/jason_soco/node = SubResource("AnimationNodeAnimation_k61lj")
+states/jason_soco/position = Vector2(719, -75)
+states/jason_soco1/node = SubResource("AnimationNodeAnimation_a7pth")
+states/jason_soco1/position = Vector2(365, -75)
+states/jason_soltar/node = SubResource("AnimationNodeAnimation_gunby")
+states/jason_soltar/position = Vector2(612.1776, 263.12555)
+states/jason_subir/node = SubResource("AnimationNodeAnimation_0jwnp")
+states/jason_subir/position = Vector2(454.1776, 311.12555)
+states/jason_tomardano/node = SubResource("AnimationNodeAnimation_u2esc")
+states/jason_tomardano/position = Vector2(372, -230)
+transitions = ["Start", "jason_parado", SubResource("AnimationNodeStateMachineTransition_4qhsj"), "jason_parado", "jason_andar", SubResource("AnimationNodeStateMachineTransition_00u2c"), "jason_jump", "jason_parado", SubResource("AnimationNodeStateMachineTransition_awefa"), "jason_andar", "jason_jump", SubResource("AnimationNodeStateMachineTransition_bm0aj"), "jason_parado", "jason_jump", SubResource("AnimationNodeStateMachineTransition_r3ihb"), "jason_andar", "jason_parado", SubResource("AnimationNodeStateMachineTransition_w6clq"), "jason_parado", "jason_lamina", SubResource("AnimationNodeStateMachineTransition_b3032"), "jason_lamina", "jason_parado", SubResource("AnimationNodeStateMachineTransition_lf1hk"), "jason_parado", "jason_soco1", SubResource("AnimationNodeStateMachineTransition_heovp"), "jason_soco1", "jason_parado", SubResource("AnimationNodeStateMachineTransition_rfk1q"), "jason_parado", "jason_chute2", SubResource("AnimationNodeStateMachineTransition_6e8hq"), "jason_chute2", "jason_parado", SubResource("AnimationNodeStateMachineTransition_mcj4p"), "jason_soco", "jason_parado", SubResource("AnimationNodeStateMachineTransition_p8s7w"), "jason_parado", "jason_soco", SubResource("AnimationNodeStateMachineTransition_jj4oi"), "jason_chute1", "jason_parado", SubResource("AnimationNodeStateMachineTransition_c58lc"), "jason_parado", "jason_chute1", SubResource("AnimationNodeStateMachineTransition_ca6pf"), "jason_soco1", "jason_chute2", SubResource("AnimationNodeStateMachineTransition_s7pee"), "jason_chute2", "jason_soco", SubResource("AnimationNodeStateMachineTransition_k61lj"), "jason_soco", "jason_chute1", SubResource("AnimationNodeStateMachineTransition_a7pth"), "jason_andar", "jason_dash", SubResource("AnimationNodeStateMachineTransition_ihqsq"), "jason_dash", "jason_andar", SubResource("AnimationNodeStateMachineTransition_wi0rm"), "jason_dash", "jason_parado", SubResource("AnimationNodeStateMachineTransition_rqtmn"), "jason_parado", "jason_dash", SubResource("AnimationNodeStateMachineTransition_n6m46"), "jason_invocar_sombras", "jason_parado", SubResource("AnimationNodeStateMachineTransition_sxewm"), "jason_parado", "jason_invocar_sombras", SubResource("AnimationNodeStateMachineTransition_um62t"), "jason_parado", "jason_empurrar", SubResource("AnimationNodeStateMachineTransition_diii6"), "jason_empurrar", "jason_parado", SubResource("AnimationNodeStateMachineTransition_i5dwj"), "jason_subir", "jason_parado", SubResource("AnimationNodeStateMachineTransition_1ucex"), "jason_pendurar", "jason_subir", SubResource("AnimationNodeStateMachineTransition_8jjrd"), "jason_pendurar", "jason_soltar", SubResource("AnimationNodeStateMachineTransition_33286"), "jason_soltar", "jason_parado", SubResource("AnimationNodeStateMachineTransition_ypyfj"), "jason_jump", "jason_pendurar", SubResource("AnimationNodeStateMachineTransition_oh8uc"), "jason_pendurar", "jason_pradireita", SubResource("AnimationNodeStateMachineTransition_exbsy"), "jason_pradireita", "jason_pendurar", SubResource("AnimationNodeStateMachineTransition_jgo6s"), "jason_pendurar", "jason_praesquerda", SubResource("AnimationNodeStateMachineTransition_x2gd0"), "jason_praesquerda", "jason_pendurar", SubResource("AnimationNodeStateMachineTransition_hi3iy"), "jason_parado", "jason_morte", SubResource("AnimationNodeStateMachineTransition_m8rte"), "jason_parado", "jason_tomardano", SubResource("AnimationNodeStateMachineTransition_n6h1t"), "jason_tomardano", "jason_parado", SubResource("AnimationNodeStateMachineTransition_y7ret")]
+graph_offset = Vector2(-245.82239, 89.31381)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lq2kk"]
+radius = 0.4
+height = 1.9
+
+[sub_resource type="Resource" id="Resource_5xdla"]
+script = ExtResource("15_0cvoj")
+
+[node name="JasonGrimm" type="CharacterBody3D" unique_id=1995482832 node_paths=PackedStringArray("area_mao_esq", "shape_mao_esq", "area_mao_dir", "shape_mao_dir", "area_perna_esq", "shape_perna_esq", "area_perna_dir", "shape_perna_dir") groups=["jogador"]]
+script = ExtResource("1_b61ng")
+area_mao_esq = NodePath("jason/Skeleton3D/MaoEsquerda/HitboxMaoEsquerda")
+shape_mao_esq = NodePath("jason/Skeleton3D/MaoEsquerda/HitboxMaoEsquerda/CollisionShape3D")
+area_mao_dir = NodePath("jason/Skeleton3D/MaoDireita/HitboxMaoDireita")
+shape_mao_dir = NodePath("jason/Skeleton3D/MaoDireita/HitboxMaoDireita/CollisionShape3D")
+area_perna_esq = NodePath("jason/Skeleton3D/PernaEsquerda/HitboxPernaEsquerda")
+shape_perna_esq = NodePath("jason/Skeleton3D/PernaEsquerda/HitboxPernaEsquerda/CollisionShape3D")
+area_perna_dir = NodePath("jason/Skeleton3D/PernaDireita/HitboxPernaDireita")
+shape_perna_dir = NodePath("jason/Skeleton3D/PernaDireita/HitboxPernaDireita/CollisionShape3D")
+
+[node name="jason" parent="." unique_id=2108714431 instance=ExtResource("2_fsanx")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="Skeleton3D" parent="jason" index="0" unique_id=545029451]
+bones/0/position = Vector3(0.046357863, 1.0149195, -0.031005215)
+bones/0/rotation = Quaternion(-0.019956931, 0.031204246, 0.013155444, 0.9992272)
+bones/1/rotation = Quaternion(0.02438627, -0.004857767, -0.07003087, 0.99723494)
+bones/2/rotation = Quaternion(-0.0003970295, 0.03421015, -0.035144314, 0.99879646)
+bones/3/rotation = Quaternion(-0.0033927464, 0.033099398, -0.040879205, 0.99861)
+bones/4/rotation = Quaternion(0.03258648, 0.054488305, 0.01007194, 0.9979317)
+bones/5/rotation = Quaternion(-0.057899993, 0.2713508, 0.05787953, 0.95899236)
+bones/7/rotation = Quaternion(-0.56026995, -0.4531186, 0.56127316, -0.4071286)
+bones/8/position = Vector3(4.8348936e-11, 0.12076286, 1.1306129e-09)
+bones/8/rotation = Quaternion(0.41325545, 0.09473089, 0.08507898, 0.9016693)
+bones/9/position = Vector3(-4.4903997e-10, 0.24267347, 2.684366e-10)
+bones/9/rotation = Quaternion(-0.0070019704, 0.0030108828, 0.078493126, 0.99688554)
+bones/10/position = Vector3(4.2997367e-10, 0.26364323, -6.222919e-09)
+bones/10/rotation = Quaternion(0.027233338, -0.15976508, -0.05109606, 0.98545563)
+bones/11/rotation = Quaternion(0.16267832, 0.4314688, 0.64970005, 0.6043678)
+bones/12/position = Vector3(0.012025928, 0.038940873, -2.154823e-10)
+bones/12/rotation = Quaternion(0.2721192, -0.10846916, -0.557921, 0.7764726)
+bones/13/rotation = Quaternion(-0.03890182, -0.053994562, -0.24031636, 0.9684108)
+bones/15/rotation = Quaternion(0.6545284, 0.060152244, 0.06390552, 0.75092643)
+bones/16/position = Vector3(-3.4160985e-05, 0.034811463, -1.9457769e-11)
+bones/16/rotation = Quaternion(0.5900732, 0.00025628798, -0.065687515, 0.80467314)
+bones/17/position = Vector3(8.342277e-06, 0.03201799, -1.396454e-10)
+bones/17/rotation = Quaternion(0.22035107, -0.00012881559, -0.024313299, 0.97511756)
+bones/19/rotation = Quaternion(0.6575029, 0.02279265, -0.07167413, 0.74968874)
+bones/20/position = Vector3(2.9009553e-07, 0.037270114, -7.7609896e-10)
+bones/20/rotation = Quaternion(0.76581335, -1.061728e-05, -0.08109929, 0.6379287)
+bones/21/position = Vector3(4.848789e-07, 0.036059, -1.6114812e-09)
+bones/21/rotation = Quaternion(0.33251783, 2.8316572e-07, -0.035244547, 0.94243824)
+bones/23/rotation = Quaternion(0.6712988, -0.03135041, -0.018168448, 0.74030066)
+bones/24/rotation = Quaternion(0.7578508, -0.0004368655, -0.08603371, 0.6467303)
+bones/25/position = Vector3(1.7747921e-05, 0.032101974, 5.6286353e-10)
+bones/25/rotation = Quaternion(0.645394, 0.00020442347, -0.07403143, 0.76025397)
+bones/27/rotation = Quaternion(0.5797623, 0.00068148295, -0.026080672, 0.8143679)
+bones/28/position = Vector3(7.2989824e-05, 0.028814938, 1.3882961e-10)
+bones/28/rotation = Quaternion(0.52430415, -0.0008366193, -0.050355792, 0.85004044)
+bones/29/position = Vector3(1.1638684e-05, 0.024074035, -7.0219475e-10)
+bones/29/rotation = Quaternion(0.31766135, 0.0004276107, -0.03246357, 0.9476483)
+bones/31/rotation = Quaternion(0.5963468, -0.3967841, 0.55036414, 0.4289898)
+bones/32/position = Vector3(-6.670896e-11, 0.12076286, 1.1296795e-09)
+bones/32/rotation = Quaternion(0.5367554, -0.06105628, 0.036797777, 0.840721)
+bones/33/position = Vector3(1.7090962e-10, 0.24264666, 2.6083655e-09)
+bones/33/rotation = Quaternion(-0.011203431, -0.0030468607, -0.17744336, 0.9840626)
+bones/34/rotation = Quaternion(0.012775398, -0.010498095, 0.029847164, 0.9994177)
+bones/35/rotation = Quaternion(0.22337864, -0.14467694, -0.60658115, 0.7491528)
+bones/36/position = Vector3(-0.013551859, 0.038097516, -8.9986163e-10)
+bones/36/rotation = Quaternion(0.10810889, 0.009147455, 0.6272472, 0.7712262)
+bones/37/position = Vector3(0.008419454, 0.042861953, -8.2365614e-10)
+bones/37/rotation = Quaternion(0.046138298, 0.11963554, 0.28878224, 0.94876945)
+bones/39/rotation = Quaternion(0.14790787, -0.13286602, -0.033284117, 0.9794704)
+bones/40/position = Vector3(-1.2426682e-05, 0.035522547, 9.1045216e-10)
+bones/40/rotation = Quaternion(0.25749558, 4.4967925e-05, 0.019564446, 0.96608144)
+bones/41/position = Vector3(1.593097e-06, 0.033256374, 1.3444201e-10)
+bones/41/rotation = Quaternion(0.023463668, -6.1070814e-06, 0.0019292609, 0.9997229)
+bones/43/rotation = Quaternion(0.15995641, -0.011878888, 0.049979955, 0.98578644)
+bones/44/position = Vector3(2.3595732e-05, 0.03593171, 9.1819885e-12)
+bones/44/rotation = Quaternion(0.3983827, -0.00018873988, 0.03185826, 0.91666585)
+bones/45/position = Vector3(9.129502e-06, 0.03653266, -1.407485e-09)
+bones/45/rotation = Quaternion(0.2252073, 7.496309e-05, 0.017472625, 0.9741543)
+bones/47/rotation = Quaternion(0.20589858, -0.024262408, 0.09612027, 0.973539)
+bones/48/position = Vector3(-1.838349e-05, 0.032987263, 3.891143e-10)
+bones/48/rotation = Quaternion(0.42084393, 0.00021206375, 0.03431328, 0.9064839)
+bones/49/position = Vector3(-1.5572969e-05, 0.030693356, -1.8792412e-10)
+bones/49/rotation = Quaternion(0.3277773, -0.00014069864, 0.02750239, 0.94435465)
+bones/51/rotation = Quaternion(0.17302549, 0.10686614, 0.13020864, 0.97040594)
+bones/52/rotation = Quaternion(0.40628245, -1.4669264e-05, 0.03330833, 0.9131403)
+bones/53/position = Vector3(-4.1306503e-06, 0.024484698, -6.47856e-10)
+bones/53/rotation = Quaternion(0.41947907, 1.4847146e-05, 0.03432591, 0.9071159)
+bones/55/rotation = Quaternion(0.09243154, 0.03376046, 0.9948929, -0.022466434)
+bones/56/position = Vector3(3.8191894e-11, 0.47884682, -3.6173453e-10)
+bones/56/rotation = Quaternion(-0.12994802, 0.057769775, -0.022431243, 0.9895823)
+bones/57/position = Vector3(4.4580425e-10, 0.38292906, 2.428284e-11)
+bones/57/rotation = Quaternion(0.5477392, -0.049365535, 0.04787243, 0.8338184)
+bones/58/position = Vector3(-3.0027472e-10, 0.17880537, 6.411971e-09)
+bones/58/rotation = Quaternion(0.24972896, 0.013288432, -0.003496857, 0.9682184)
+bones/60/rotation = Quaternion(-0.09402913, -0.0054344926, 0.9909072, 0.09608354)
+bones/61/rotation = Quaternion(-0.09885977, 0.061672688, 0.012565121, 0.9931089)
+bones/62/rotation = Quaternion(0.53811055, 0.08538329, 0.016444568, 0.83837724)
+bones/63/rotation = Quaternion(0.24796008, -0.0072949813, 0.002094099, 0.9687405)
+
+[node name="4_ Legs_Cargo" parent="jason/Skeleton3D" index="0" unique_id=1495055109]
+surface_material_override/0 = SubResource("StandardMaterial3D_722wk")
+surface_material_override/1 = SubResource("StandardMaterial3D_ns8bw")
+surface_material_override/2 = SubResource("StandardMaterial3D_l5kls")
+surface_material_override/3 = SubResource("StandardMaterial3D_sj37a")
+surface_material_override/4 = SubResource("StandardMaterial3D_8psmr")
+surface_material_override/5 = SubResource("StandardMaterial3D_vhbem")
+
+[node name="MaoEsquerda" type="BoneAttachment3D" parent="jason/Skeleton3D" index="1" unique_id=161657416]
+transform = Transform3D(-0.2528997, 0.11091466, -0.9611137, -0.04458854, -0.9936876, -0.10294113, -0.96646434, 0.01682092, 0.25624874, 0.36424032, 0.9540735, -0.06360912)
+bone_name = "mixamorig_LeftHand"
+bone_idx = 10
+
+[node name="HitboxMaoEsquerda" type="Area3D" parent="jason/Skeleton3D/MaoEsquerda" unique_id=247749465]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="jason/Skeleton3D/MaoEsquerda/HitboxMaoEsquerda" unique_id=1943643136]
+transform = Transform3D(1, -4.656613e-10, 1.4901161e-08, 0, 1, 1.7462298e-09, 0, -9.313226e-10, 1.0000001, 0, 0, 0)
+shape = SubResource("SphereShape3D_s7pee")
+
+[node name="MaoDireita" type="BoneAttachment3D" parent="jason/Skeleton3D" index="2" unique_id=811508112]
+transform = Transform3D(0.39593112, -0.29988942, 0.8679316, 0.076969534, -0.9310065, -0.35679495, 0.91504896, 0.20807041, -0.34553206, -0.22539848, 1.0710788, 0.050374776)
+bone_name = "mixamorig_RightHand"
+bone_idx = 34
+
+[node name="HitboxMaoDireita" type="Area3D" parent="jason/Skeleton3D/MaoDireita" unique_id=619126677]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="jason/Skeleton3D/MaoDireita/HitboxMaoDireita" unique_id=1569618041]
+shape = SubResource("SphereShape3D_b3032")
+
+[node name="PernaEsquerda" type="BoneAttachment3D" parent="jason/Skeleton3D" index="3" unique_id=8486501]
+transform = Transform3D(-0.9633434, 0.25131732, 0.09385738, -0.054023452, -0.5244267, 0.84974, 0.2627757, 0.813521, 0.51877993, 0.18180652, 0.10367587, -0.05605174)
+bone_name = "mixamorig_LeftFoot"
+bone_idx = 57
+
+[node name="HitboxPernaEsquerda" type="Area3D" parent="jason/Skeleton3D/PernaEsquerda" unique_id=1665520029]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="jason/Skeleton3D/PernaEsquerda/HitboxPernaEsquerda" unique_id=242630499]
+shape = SubResource("SphereShape3D_lf1hk")
+disabled = true
+
+[node name="PernaDireita" type="BoneAttachment3D" parent="jason/Skeleton3D" index="4" unique_id=311391451]
+transform = Transform3D(-0.92009664, -0.35028297, -0.17528304, 0.03795158, -0.5251219, 0.85018027, -0.3898487, 0.77559555, 0.49645668, -0.1687536, 0.10436639, -0.086128496)
+bone_name = "mixamorig_RightFoot"
+bone_idx = 62
+
+[node name="HitboxPernaDireita" type="Area3D" parent="jason/Skeleton3D/PernaDireita" unique_id=1747388289]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="jason/Skeleton3D/PernaDireita/HitboxPernaDireita" unique_id=725773813]
+transform = Transform3D(0.9736812, 0.09195572, -0.2085427, 0.119850025, 0.57169807, 0.8116644, 0.19386046, -0.8152958, 0.5456302, -0.07268795, 0.06595963, 0.16632205)
+shape = SubResource("SphereShape3D_5557x")
+
+[node name="AnimationPlayer" parent="jason" index="1" unique_id=757595075]
+libraries/jason = SubResource("AnimationLibrary_51ce1")
+
+[node name="AnimationTree" type="AnimationTree" parent="jason" unique_id=1011672543]
+tree_root = SubResource("AnimationNodeStateMachine_c58lc")
+anim_player = NodePath("../AnimationPlayer")
+parameters/conditions/is_idle = false
+parameters/conditions/is_jumping = false
+parameters/conditions/is_moving = false
+parameters/conditions/on_floor = false
+parameters/conditions/vai_chute2 = false
+parameters/conditions/vai_chute4 = false
+parameters/conditions/vai_soco3 = false
+
+[node name="RayCast_Parede" type="RayCast3D" parent="jason" unique_id=1904737283]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 1.8975487, 0)
+target_position = Vector3(0, 0, -0.6)
+
+[node name="RayCast_Borda" type="RayCast3D" parent="jason" unique_id=1542458728]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -4.371139e-08, 2, 0.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1370895257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.89685476, 0)
+shape = SubResource("CapsuleShape3D_lq2kk")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=332178829]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 0.84892553, 0.5285124, 0, -0.5285124, 0.84892553, 0, 0, 1.1920929e-07)
+top_level = true
+current = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=2029061837]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("13_2vajh")
+metadata/_custom_type_script = "uid://bd046eokvcnu2"
+
+[node name="HUD_Principal" parent="." unique_id=1598834282 instance=ExtResource("16_hm5l3")]
+
+[node name="PontosDeAtaque" type="Node3D" parent="." unique_id=738945478]
+
+[node name="Lamina" type="Marker3D" parent="PontosDeAtaque" unique_id=426074432]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2, -0.71091396)
+
+[node name="CameraPivot" type="SpringArm3D" parent="." unique_id=1877216219]
+transform = Transform3D(1, 0, 0, 0, 0.9769786, 0.21333733, 0, -0.21333733, 0.9769786, 0, 2.4583902, 1.0372055)
+spring_length = 3.0
+
+[node name="PhantomCamera3D" type="Node3D" parent="CameraPivot" unique_id=196461795]
+transform = Transform3D(1, 0, 0, 0, 0.9421335, 0.3352378, 0, -0.3352378, 0.9421335, 0, -2.18052, -1.5377939)
+script = ExtResource("14_i7cms")
+tween_resource = SubResource("Resource_5xdla")
+follow_offset = Vector3(0.2, 3, 1.3)
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[connection signal="area_entered" from="jason/Skeleton3D/MaoEsquerda/HitboxMaoEsquerda" to="." method="_on_hitbox_mao_esquerda_area_entered"]
+[connection signal="area_entered" from="jason/Skeleton3D/MaoDireita/HitboxMaoDireita" to="." method="_on_hitbox_mao_direita_area_entered"]
+[connection signal="area_entered" from="jason/Skeleton3D/PernaEsquerda/HitboxPernaEsquerda" to="." method="_on_hitbox_perna_esquerda_area_entered"]
+[connection signal="area_entered" from="jason/Skeleton3D/PernaDireita/HitboxPernaDireita" to="." method="_on_hitbox_perna_direita_area_entered"]
+
+[editable path="jason"]

@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://blronus3cj6vg"]
+
+[ext_resource type="Script" uid="uid://dkdjtb466ui0m" path="res://personagens/jogador/jason_grimm/ui/hud/hud.gd" id="1_q07p3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d1q42"]
+bg_color = Color(0, 0, 0.2509804, 0.3137255)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wn4h5"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q07p3"]
+bg_color = Color(0.03529412, 0.011764706, 0.16470589, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xvxvt"]
+bg_color = Color(0, 0, 0, 0.5254902)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vv6hw"]
+bg_color = Color(1, 1, 0, 1)
+
+[node name="HUD_Principal" type="CanvasLayer" unique_id=1598834282]
+script = ExtResource("1_q07p3")
+
+[node name="Control" type="Control" parent="." unique_id=1422973552]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BarraVidaJason" type="ProgressBar" parent="Control" unique_id=1098623235]
+layout_mode = 0
+offset_right = 190.0
+offset_bottom = 27.0
+theme_override_styles/background = SubResource("StyleBoxFlat_d1q42")
+theme_override_styles/fill = SubResource("StyleBoxFlat_wn4h5")
+value = 100.0
+show_percentage = false
+
+[node name="BarraMagiaJason" type="ProgressBar" parent="Control" unique_id=1599566340]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = 6.9999924
+offset_right = 190.0
+offset_bottom = 33.999992
+grow_vertical = 2
+scale = Vector2(0.90405524, 0.42750221)
+theme_override_styles/background = SubResource("StyleBoxFlat_d1q42")
+theme_override_styles/fill = SubResource("StyleBoxFlat_q07p3")
+value = 100.0
+show_percentage = false
+
+[node name="ContainerXP" type="Control" parent="." unique_id=2122945836]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+size_flags_horizontal = 0
+
+[node name="BarraXPJason" type="ProgressBar" parent="ContainerXP" unique_id=825685947]
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 27.0
+theme_override_styles/background = SubResource("StyleBoxFlat_xvxvt")
+theme_override_styles/fill = SubResource("StyleBoxFlat_vv6hw")
+
+[node name="LabelNivelJason" type="Label" parent="ContainerXP" unique_id=1170176503]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
