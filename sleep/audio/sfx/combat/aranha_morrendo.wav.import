@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://ctmft60xndnci"
-path="res://.godot/imported/aranha_morrendo.wav-0145fb0077ed289bb37cbdb1dcbd171a.sample"
+path="res://.godot/imported/aranha_morrendo.wav-ab627437f832ee3119105a4371111654.sample"
 
 [deps]
 
 source_file="res://audio/sfx/combat/aranha_morrendo.wav"
-dest_files=["res://.godot/imported/aranha_morrendo.wav-0145fb0077ed289bb37cbdb1dcbd171a.sample"]
+dest_files=["res://.godot/imported/aranha_morrendo.wav-ab627437f832ee3119105a4371111654.sample"]
 
 [params]
 

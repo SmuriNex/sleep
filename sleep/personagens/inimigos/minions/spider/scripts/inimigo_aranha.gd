@@ -5,9 +5,10 @@ const ATRITO_KNOCKBACK: float = 0.8
 const MAX_HITBOX_RESULTS: int = 16
 const DROP_VIDA_OFFSET: Vector3 = Vector3(0.0, 0.6, 0.0)
 const DROP_VIDA_SCENE: PackedScene = preload("res://objetos_interativos/coletaveis/recuperar_vida.tscn")
+const DEFAULT_STATUS_VIDA_MAXIMA := 75.0
+const DEFAULT_STATUS_VIDA_ATUAL := 75.0
 
 @export_group("Atributos")
-@export var vida_maxima: float = 75.0
 @export var velocidade_andar: float = 3.0
 
 @export_group("Combate")
@@ -20,17 +21,17 @@ const DROP_VIDA_SCENE: PackedScene = preload("res://objetos_interativos/coletave
 @export_flags_3d_physics var mascara_colisao_jogador: int = 1
 
 @export_group("VFX e SFX")
-@export var som_patada: AudioStream = preload("res://audio/sfx/combat/aranha_atacando.wav")
-@export var som_dano_recebido: AudioStream = preload("res://audio/sfx/combat/aranha.wav")
-@export var som_morte: AudioStream = preload("res://audio/sfx/combat/aranha_morrendo.wav")
-@export var som_passos_aranha: AudioStream = preload("res://audio/sfx/combat/aranha.wav")
+var som_patada: AudioStream = preload("res://audio/sfx/combat/aranha_atacando.wav")
+var som_dano_recebido: AudioStream = preload("res://audio/sfx/combat/aranha.wav")
+var som_morte: AudioStream = preload("res://audio/sfx/combat/aranha_morrendo.wav")
+var som_passos_aranha: AudioStream = preload("res://audio/sfx/combat/aranha.wav")
+@export var offset_inicio_passos: float = 0.0
 @export var vfx_impacto_scene: PackedScene
 
 @export_group("Progressao")
 @export var xp_drop: int = 25
 
-var vida_atual: float = 75.0
-var esta_morto: bool = false
+var status_component: StatusComponent = null
 var tempo_tonteada: float = 0.0
 var tempo_recarga_ataque: float = 0.0
 var gravidade: float = float(ProjectSettings.get_setting("physics/3d/default_gravity"))
@@ -40,32 +41,92 @@ var ataque_direito_ativo: bool = false
 var alvos_atingidos_ataque_esquerdo: Array[Node] = []
 var alvos_atingidos_ataque_direito: Array[Node] = []
 var alvo: Node3D = null
+var tocador_passos: AudioStreamPlayer3D = null
+
+var vida_atual: float:
+	get:
+		return status_component.vida_atual if status_component != null else DEFAULT_STATUS_VIDA_ATUAL
+
+var vida_maxima: float:
+	get:
+		return status_component.vida_maxima if status_component != null else DEFAULT_STATUS_VIDA_MAXIMA
+
+var esta_morto: bool:
+	get:
+		return status_component != null and status_component.is_dead
 
 @onready var anim: AnimationPlayer = $Spider/AnimationPlayer
 @onready var shape_ataque_esquerdo: CollisionShape3D = $Spider/SpiderArmature/Skeleton3D/Esquerda1/HitboxEsquerda1/CollisionShape3D
 @onready var shape_ataque_direito: CollisionShape3D = $Spider/SpiderArmature/Skeleton3D/Direita1/HitboxDireita1/CollisionShape3D
 
 func _ready() -> void:
-	vida_atual = clamp(vida_atual, 0.0, vida_maxima)
+	status_component = _obter_status_component_obrigatorio()
+	status_component.normalizar_valores()
+	_conectar_status_component()
+	offset_inicio_passos = max(offset_inicio_passos, 0.0)
+	tocador_passos = AudioStreamPlayer3D.new()
+	tocador_passos.stream = preload("res://audio/sfx/combat/aranha.wav")
+	add_child(tocador_passos)
+
 	anim.play("aranha/parado")
 	alvo = _buscar_jogador_principal()
 	desligar_ataque_esquerdo()
 	desligar_ataque_direito()
 
+func _obter_status_component_obrigatorio() -> StatusComponent:
+	var componente_existente: StatusComponent = get_node_or_null("StatusComponent") as StatusComponent
+	assert(componente_existente != null, "InimigoAranha requer um nó filho StatusComponent com status_component.gd.")
+	return componente_existente
+
+func _conectar_status_component() -> void:
+	if status_component == null:
+		return
+
+	if not status_component.on_dano_recebido.is_connected(Callable(self, "_on_status_dano_recebido")):
+		status_component.on_dano_recebido.connect(Callable(self, "_on_status_dano_recebido"))
+
+	if not status_component.on_morte.is_connected(Callable(self, "_on_status_morte")):
+		status_component.on_morte.connect(Callable(self, "_on_status_morte"))
+
+func _parar_som_passos() -> void:
+	if tocador_passos != null and tocador_passos.playing:
+		tocador_passos.stop()
+
+func _atualizar_som_passos() -> void:
+	if tocador_passos == null:
+		return
+
+	var deve_tocar_passos: bool = (
+		is_on_floor()
+		and velocity.length() > 0.1
+		and not esta_morto
+		and tempo_tonteada <= 0.0
+		and anim.current_animation == "aranha/andar"
+	)
+
+	if deve_tocar_passos:
+		if not tocador_passos.playing:
+			tocador_passos.play(offset_inicio_passos)
+	else:
+		_parar_som_passos()
+
 func _physics_process(delta: float) -> void:
 	if esta_morto:
+		_parar_som_passos()
 		return
 
 	_atualizar_alvo()
 	_atualizar_temporizadores(delta)
 
 	if tempo_tonteada > 0.0:
+		_parar_som_passos()
 		_processar_tonteada(delta)
 		move_and_slide()
 		return
 
 	_processar_movimento(delta)
 	move_and_slide()
+	_atualizar_som_passos()
 
 func _atualizar_temporizadores(delta: float) -> void:
 	if tempo_recarga_ataque > 0.0:
@@ -148,7 +209,8 @@ func tocar_som_ataque() -> void:
 	_tocar_som_3d(som_patada, global_position)
 
 func tocar_som_passos() -> void:
-	_tocar_som_3d(som_passos_aranha, global_position)
+	# Mantido apenas para compatibilidade com tracks legados.
+	pass
 
 func _spawnar_drop_de_vida() -> void:
 	if DROP_VIDA_SCENE == null or not is_inside_tree():
@@ -291,22 +353,24 @@ func _resolver_jogador_alvo(collider: Object) -> Node:
 
 	return null
 
-func receber_dano(quantidade: float) -> void:
-	if esta_morto:
+func receber_dano(quantidade: float, pos_atacante: Vector3 = Vector3.ZERO) -> void:
+	if status_component == null:
 		return
 
+	status_component.receber_dano(quantidade, pos_atacante)
+
+func _on_status_dano_recebido(quantidade: float, _pos_atacante: Vector3) -> void:
+	_parar_som_passos()
 	_spawnar_vfx_na_posicao(vfx_impacto_scene, global_position)
 	_tocar_som_3d(som_dano_recebido, global_position)
-
-	vida_atual -= quantidade
 	print("[ARANHA] Tomei ", quantidade, " de dano! Vida restante: ", vida_atual)
 
 	tempo_tonteada = tempo_tonteada_ao_receber_dano
 	tempo_recarga_ataque = tempo_recarga_apos_levar_dano
 	anim.play("aranha/parado")
 
-	if vida_atual <= 0.0:
-		morrer()
+func _on_status_morte() -> void:
+	morrer()
 
 func receber_empurrao(direcao_do_soco: Vector3) -> void:
 	if esta_morto:
@@ -315,7 +379,14 @@ func receber_empurrao(direcao_do_soco: Vector3) -> void:
 	knockback_velocity = direcao_do_soco * 10.0
 
 func morrer() -> void:
-	esta_morto = true
+	if status_component != null and not status_component.is_dead:
+		status_component.matar()
+		return
+
+	if anim.current_animation == "aranha/morte":
+		return
+
+	_parar_som_passos()
 	desligar_ataque_esquerdo()
 	desligar_ataque_direito()
 	anim.play("aranha/morte")

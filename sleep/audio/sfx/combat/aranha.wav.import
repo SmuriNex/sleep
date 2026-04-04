@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://dl8h3lammgn15"
-path="res://.godot/imported/ranha.wav-ad1718fecc943d2560bbb3bc52d8bb05.sample"
+path="res://.godot/imported/aranha.wav-7a307227cd06c2a013e3db94f56eeb3a.sample"
 
 [deps]
 
 source_file="res://audio/sfx/combat/aranha.wav"
-dest_files=["res://.godot/imported/ranha.wav-ad1718fecc943d2560bbb3bc52d8bb05.sample"]
+dest_files=["res://.godot/imported/aranha.wav-7a307227cd06c2a013e3db94f56eeb3a.sample"]
 
 [params]
 

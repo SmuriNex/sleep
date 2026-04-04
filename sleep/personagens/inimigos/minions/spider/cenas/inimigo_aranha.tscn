@@ -7,6 +7,7 @@
 [ext_resource type="Animation" uid="uid://b84f25vw2i08g" path="res://personagens/inimigos/minions/spider/animacoes/recursos/jump.res" id="3_v2fiw"]
 [ext_resource type="Animation" uid="uid://dgdawy0ivlos5" path="res://personagens/inimigos/minions/spider/animacoes/recursos/morte.res" id="4_ouhyf"]
 [ext_resource type="Animation" uid="uid://cqpu4tl6x2q8g" path="res://personagens/inimigos/minions/spider/animacoes/recursos/parado.res" id="5_ustxb"]
+[ext_resource type="Script" path="res://sistemas/componentes/status_component.gd" id="6_status"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v8lwr"]
 resource_name = "Material"
@@ -207,6 +208,15 @@ _data = {
 [node name="InimigoAranha" type="CharacterBody3D" unique_id=1911282715 groups=["inimigo"]]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
 script = ExtResource("1_45hh1")
+
+[node name="StatusComponent" type="Node" parent="."]
+script = ExtResource("6_status")
+vida_maxima = 75.0
+vida_atual = 75.0
+tempo_invencibilidade = 0.0
+nivel_atual = 1
+xp_atual = 0
+xp_prox_nivel = 100
 
 [node name="Spider" type="Node3D" parent="." unique_id=459203183]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.05679345, 0, 0.0033624172)

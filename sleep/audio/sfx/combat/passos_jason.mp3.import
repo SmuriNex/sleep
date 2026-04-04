@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://cdueql7ou3xoc"
-path="res://.godot/imported/passos_jason.mp3-f09b1b315b6a1b79ce1262e33b933a5d.mp3str"
+path="res://.godot/imported/passos_jason.mp3-60366d8aff68ad86b1d9d3ea6e73bcfc.mp3str"
 
 [deps]
 
 source_file="res://audio/sfx/combat/passos_jason.mp3"
-dest_files=["res://.godot/imported/passos_jason.mp3-f09b1b315b6a1b79ce1262e33b933a5d.mp3str"]
+dest_files=["res://.godot/imported/passos_jason.mp3-60366d8aff68ad86b1d9d3ea6e73bcfc.mp3str"]
 
 [params]
 

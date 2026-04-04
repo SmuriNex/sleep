@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bwox25uvc1exs"
-path="res://.godot/imported/jason_atacando.wav-5f6b6156eacdc7701c08bbe34aa0aec4.sample"
+path="res://.godot/imported/jason_atacando.wav-80459d43ec3e38bba67c45e16db9d251.sample"
 
 [deps]
 
 source_file="res://audio/sfx/combat/jason_atacando.wav"
-dest_files=["res://.godot/imported/jason_atacando.wav-5f6b6156eacdc7701c08bbe34aa0aec4.sample"]
+dest_files=["res://.godot/imported/jason_atacando.wav-80459d43ec3e38bba67c45e16db9d251.sample"]
 
 [params]
 

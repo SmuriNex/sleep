@@ -27,6 +27,12 @@ const ANIM_HIT := &"jason_tomardano"
 const ANIM_DEATH := &"jason_morte"
 
 const INVENCIBILITY_BLINK_INTERVAL := 0.08
+const DEFAULT_STATUS_VIDA_MAXIMA := 100.0
+const DEFAULT_STATUS_VIDA_ATUAL := 100.0
+const DEFAULT_STATUS_TEMPO_INVENCIBILIDADE := 1.2
+const DEFAULT_STATUS_NIVEL_ATUAL := 1
+const DEFAULT_STATUS_XP_ATUAL := 0
+const DEFAULT_STATUS_XP_PROX_NIVEL := 100
 
 const COMBO_ANIMATIONS := [
 	&"jason_soco1",
@@ -56,19 +62,11 @@ const COMBO_BUFFER_CONDITIONS := [
 ]
 
 @export_group("Atributos")
-@export var vida_maxima: float = 100.0
-@export var vida_atual: float = 100.0
 @export var magia_maxima: float = 50.0
 @export var magia_atual: float = 50.0
 
-@export_group("Progressao")
-@export var nivel_atual: int = 1
-@export var xp_atual: int = 0
-@export var xp_prox_nivel: int = 100
-
 @export_group("Status de Defesa")
 @export var knockback_force: float = 15.0
-@export var tempo_invencibilidade: float = 1.2
 
 @export_group("Movimento Base")
 @export var move_speed: float = 5.0
@@ -106,9 +104,10 @@ const COMBO_BUFFER_CONDITIONS := [
 @export var hitstop_time_scale: float = 0.05
 
 @export_group("VFX e SFX")
-@export var som_ataque_espada: AudioStream = preload("res://audio/sfx/combat/jason_atacando.wav")
-@export var som_passos: AudioStream = preload("res://audio/sfx/combat/passos_jason.mp3")
-@export var som_dano_recebido: AudioStream
+var som_ataque_espada: AudioStream = preload("res://audio/sfx/combat/jason_atacando.wav")
+var som_passos: AudioStream = preload("res://audio/sfx/combat/passos_jason.mp3")
+@export var offset_inicio_passos: float = 0.0
+var som_dano_recebido: AudioStream = null
 @export var vfx_sangue_scene: PackedScene
 
 @export_group("Mira e Interacao")
@@ -146,9 +145,8 @@ const COMBO_BUFFER_CONDITIONS := [
 
 var gravity: float = float(ProjectSettings.get_setting("physics/3d/default_gravity"))
 
+var status_component: StatusComponent = null
 var is_dashing: bool = false
-var is_invencivel: bool = false
-var is_dead: bool = false
 var dash_timer: float = 0.0
 var ghost_timer: float = 0.0
 var dash_cooldown_timer: float = 0.0
@@ -173,6 +171,39 @@ var cam_rot_y: float = 0.0
 var em_hitstop: bool = false
 var death_collision_pending: bool = false
 var invencibilidade_tween: Tween = null
+var tocador_passos: AudioStreamPlayer3D = null
+
+var vida_atual: float:
+	get:
+		return status_component.vida_atual if status_component != null else DEFAULT_STATUS_VIDA_ATUAL
+
+var vida_maxima: float:
+	get:
+		return status_component.vida_maxima if status_component != null else DEFAULT_STATUS_VIDA_MAXIMA
+
+var nivel_atual: int:
+	get:
+		return status_component.nivel_atual if status_component != null else DEFAULT_STATUS_NIVEL_ATUAL
+
+var xp_atual: int:
+	get:
+		return status_component.xp_atual if status_component != null else DEFAULT_STATUS_XP_ATUAL
+
+var xp_prox_nivel: int:
+	get:
+		return status_component.xp_prox_nivel if status_component != null else DEFAULT_STATUS_XP_PROX_NIVEL
+
+var tempo_invencibilidade: float:
+	get:
+		return status_component.tempo_invencibilidade if status_component != null else DEFAULT_STATUS_TEMPO_INVENCIBILIDADE
+
+var is_invencivel: bool:
+	get:
+		return status_component != null and status_component.is_invencivel
+
+var is_dead: bool:
+	get:
+		return status_component != null and status_component.is_dead
 
 @onready var corpo_shape: CollisionShape3D = $CollisionShape3D
 @onready var hud = $HUD_Principal
@@ -185,12 +216,16 @@ var invencibilidade_tween: Tween = null
 @onready var camera_pivot: SpringArm3D = $CameraPivot
 
 func _ready() -> void:
+	status_component = _obter_status_component_obrigatorio()
+	status_component.normalizar_valores()
+	_conectar_status_component()
+	offset_inicio_passos = max(offset_inicio_passos, 0.0)
+	tocador_passos = AudioStreamPlayer3D.new()
+	tocador_passos.stream = preload("res://audio/sfx/combat/passos_jason.mp3")
+	add_child(tocador_passos)
+
 	anim_tree.active = true
-	vida_atual = clamp(vida_atual, 0.0, vida_maxima)
 	magia_atual = clamp(magia_atual, 0.0, magia_maxima)
-	nivel_atual = max(nivel_atual, 1)
-	xp_atual = max(xp_atual, 0)
-	xp_prox_nivel = max(xp_prox_nivel, 1)
 	_atualizar_hud_vida()
 	_atualizar_hud_magia()
 	_atualizar_hud_xp()
@@ -200,8 +235,55 @@ func _ready() -> void:
 
 	_definir_todas_hitboxes_ativas(false)
 
+func _obter_status_component_obrigatorio() -> StatusComponent:
+	var componente_existente: StatusComponent = get_node_or_null("StatusComponent") as StatusComponent
+	assert(componente_existente != null, "JasonGrimm requer um nó filho StatusComponent com status_component.gd.")
+	return componente_existente
+
+func _conectar_status_component() -> void:
+	if status_component == null:
+		return
+
+	if not status_component.on_dano_recebido.is_connected(Callable(self, "_on_status_dano_recebido")):
+		status_component.on_dano_recebido.connect(Callable(self, "_on_status_dano_recebido"))
+
+	if not status_component.on_cura_recebida.is_connected(Callable(self, "_on_status_cura_recebida")):
+		status_component.on_cura_recebida.connect(Callable(self, "_on_status_cura_recebida"))
+
+	if not status_component.on_morte.is_connected(Callable(self, "_on_status_morte")):
+		status_component.on_morte.connect(Callable(self, "_on_status_morte"))
+
+	if not status_component.on_level_up.is_connected(Callable(self, "_on_status_level_up")):
+		status_component.on_level_up.connect(Callable(self, "_on_status_level_up"))
+
+func _parar_som_passos() -> void:
+	if tocador_passos != null and tocador_passos.playing:
+		tocador_passos.stop()
+
+func _atualizar_som_passos() -> void:
+	if tocador_passos == null:
+		return
+
+	var deve_tocar_passos: bool = (
+		is_on_floor()
+		and velocity.length() > 0.1
+		and not is_dead
+		and not is_dashing
+		and not is_acting
+		and climb_state == ClimbState.NONE
+		and not _esta_em_animacao_de_stun()
+	)
+
+	if deve_tocar_passos:
+		if not tocador_passos.playing:
+			print("Tentando tocar o passo!")
+			tocador_passos.play(offset_inicio_passos)
+	else:
+		_parar_som_passos()
+
 func _physics_process(delta: float) -> void:
 	if is_dead:
+		_parar_som_passos()
 		_processar_fisica_de_morte(delta)
 		return
 
@@ -209,6 +291,7 @@ func _physics_process(delta: float) -> void:
 	_atualizar_camera()
 
 	if _processar_estado_escalada(delta):
+		_atualizar_som_passos()
 		return
 
 	_atualizar_estado_aereo(delta)
@@ -220,6 +303,7 @@ func _physics_process(delta: float) -> void:
 
 	var esta_empurrando: bool = _processar_empurrao(delta, direction)
 	_atualizar_animacao_de_locomocao(estado_atual, direction, esta_empurrando)
+	_atualizar_som_passos()
 
 func _processar_fisica_de_morte(delta: float) -> void:
 	_definir_estado_de_locomocao(false, false)
@@ -363,6 +447,7 @@ func _tentar_agarrar_borda() -> void:
 		return
 
 	climb_state = ClimbState.HANGING
+	_parar_som_passos()
 	velocity = Vector3.ZERO
 	corpo_ignorado = corpo
 	add_collision_exception_with(corpo_ignorado)
@@ -392,6 +477,9 @@ func _atualizar_estado_de_acao() -> StringName:
 	var estava_em_acao: bool = is_acting
 	is_acting = ACTION_ANIMATIONS.has(estado_atual)
 
+	if is_acting:
+		_parar_som_passos()
+
 	if estava_em_acao and not is_acting:
 		combo_step = 1
 		inimigo_alvo = null
@@ -414,11 +502,13 @@ func _processar_inputs_de_acao() -> void:
 		if is_acting:
 			_handle_combo_buffer()
 		else:
+			_parar_som_passos()
 			anim_state.travel(COMBO_ANIMATIONS[0])
 			combo_step = 1
 
 	if Input.is_action_just_pressed("ataque_pesado") and _tem_controle_total_no_solo():
 		if magia_atual >= shadow_army_magic_cost:
+			_parar_som_passos()
 			anim_state.travel(ANIM_SUMMON_SHADOWS)
 
 	if Input.is_action_just_pressed("interagir") and _tem_controle_total_no_solo():
@@ -627,6 +717,7 @@ func _tentar_interagir() -> void:
 		mais_proximo.call("acao_interagir", self)
 
 func start_dash() -> void:
+	_parar_som_passos()
 	var direction: Vector3 = _obter_direcao_de_movimento()
 	dash_direction = direction if direction != Vector3.ZERO else -model.global_transform.basis.z.normalized()
 	is_dashing = true
@@ -697,7 +788,8 @@ func tocar_som_ataque() -> void:
 	_tocar_som_3d(som_ataque_espada, origem_som)
 
 func tocar_som_passos() -> void:
-	_tocar_som_3d(som_passos, global_position)
+	# Mantido apenas para compatibilidade com tracks legados.
+	pass
 
 func spawn_dash_ghost() -> void:
 	if dash_ghost_scene == null or model == null or not is_instance_valid(model) or not model.is_inside_tree():
@@ -713,6 +805,7 @@ func _usar_especial_lamina() -> void:
 	if is_dead or magia_atual < blade_magic_cost:
 		return
 
+	_parar_som_passos()
 	magia_atual -= blade_magic_cost
 	_atualizar_hud_magia()
 	_buscar_inimigo_para_magia()
@@ -885,25 +978,40 @@ func _processar_dano(area_do_inimigo: Area3D, valor_dano_base: int) -> void:
 	_aplicar_hitstop(hitstop_duration)
 
 func receber_dano(quantidade: float, atacante_pos: Vector3 = Vector3.ZERO) -> void:
-	if is_dead or is_invencivel or is_dashing:
+	if status_component == null or is_dashing:
 		return
 
+	status_component.receber_dano(quantidade, atacante_pos)
+
+func _on_status_dano_recebido(_quantidade: float, pos_atacante: Vector3) -> void:
+	_parar_som_passos()
 	_spawnar_vfx_na_posicao(vfx_sangue_scene, global_position)
 	_tocar_som_3d(som_dano_recebido, global_position)
-
-	vida_atual = clamp(vida_atual - quantidade, 0.0, vida_maxima)
 	_atualizar_hud_vida()
 
-	if vida_atual <= 0.0:
-		_morrer()
+	if is_dead:
 		return
 
 	_preparar_reacao_de_dano()
-	_aplicar_knockback(atacante_pos)
+	_aplicar_knockback(pos_atacante)
 	anim_state.start(ANIM_HIT)
-	_iniciar_invencibilidade()
+	_iniciar_feedback_invencibilidade()
+
+func _on_status_cura_recebida(_quantidade: float) -> void:
+	_atualizar_hud_vida()
+
+func _on_status_morte() -> void:
+	_atualizar_hud_vida()
+	_morrer()
+
+func _on_status_level_up(_novo_nivel: int) -> void:
+	magia_atual = magia_maxima
+	_atualizar_hud_vida()
+	_atualizar_hud_magia()
+	_atualizar_hud_xp()
 
 func _preparar_reacao_de_dano() -> void:
+	_parar_som_passos()
 	if climb_state != ClimbState.NONE:
 		cooldown_escalada = max(cooldown_escalada, climb_drop_cooldown)
 		_cancelar_escalada(true)
@@ -913,6 +1021,7 @@ func _preparar_reacao_de_dano() -> void:
 	is_acting = true
 
 func _interromper_acao_atual() -> void:
+	_parar_som_passos()
 	is_dashing = false
 	dash_timer = 0.0
 	ghost_timer = 0.0
@@ -939,12 +1048,11 @@ func _calcular_direcao_knockback(atacante_pos: Vector3) -> Vector3:
 
 	return direcao_knockback.normalized()
 
-func _iniciar_invencibilidade() -> void:
-	is_invencivel = true
+func _iniciar_feedback_invencibilidade() -> void:
 	_parar_piscar_modelo()
 
 	if tempo_invencibilidade <= 0.0:
-		_encerrar_invencibilidade()
+		_encerrar_feedback_invencibilidade()
 		return
 
 	var quantidade_piscadas: int = max(int(ceil(tempo_invencibilidade / INVENCIBILITY_BLINK_INTERVAL)), 1)
@@ -955,14 +1063,13 @@ func _iniciar_invencibilidade() -> void:
 		invencibilidade_tween.tween_callback(Callable(self, "_alternar_visibilidade_modelo"))
 		invencibilidade_tween.tween_interval(intervalo_piscada)
 
-	invencibilidade_tween.finished.connect(Callable(self, "_encerrar_invencibilidade"))
+	invencibilidade_tween.finished.connect(Callable(self, "_encerrar_feedback_invencibilidade"))
 
 func _alternar_visibilidade_modelo() -> void:
 	if model:
 		model.visible = not model.visible
 
-func _encerrar_invencibilidade() -> void:
-	is_invencivel = false
+func _encerrar_feedback_invencibilidade() -> void:
 	invencibilidade_tween = null
 
 	if model:
@@ -977,8 +1084,7 @@ func _parar_piscar_modelo() -> void:
 		model.visible = true
 
 func _morrer() -> void:
-	is_dead = true
-	is_invencivel = false
+	_parar_som_passos()
 	velocity = Vector3.ZERO
 	_preparar_reacao_de_dano()
 	_parar_piscar_modelo()
@@ -1003,35 +1109,21 @@ func _atualizar_hud_magia() -> void:
 		hud.atualizar_magia(magia_atual, magia_maxima)
 
 func curar(quantidade: float) -> bool:
-	if is_dead or quantidade <= 0.0 or vida_atual >= vida_maxima:
+	if status_component == null:
 		return false
 
-	vida_atual = clamp(vida_atual + quantidade, 0.0, vida_maxima)
-	_atualizar_hud_vida()
-	return true
+	return status_component.curar(quantidade)
 
 func _atualizar_hud_xp() -> void:
 	if hud:
 		hud.atualizar_xp(xp_atual, xp_prox_nivel, nivel_atual)
 
 func ganhar_xp(quantidade: int) -> void:
-	if quantidade <= 0:
+	if status_component == null:
 		return
 
-	xp_atual += quantidade
-
-	while xp_atual >= xp_prox_nivel and xp_prox_nivel > 0:
-		xp_atual -= xp_prox_nivel
-		_subir_de_nivel()
-
+	status_component.ganhar_xp(quantidade)
 	_atualizar_hud_xp()
-
-func _subir_de_nivel() -> void:
-	nivel_atual += 1
-	vida_atual = vida_maxima
-	magia_atual = magia_maxima
-	_atualizar_hud_vida()
-	_atualizar_hud_magia()
 
 func _aplicar_hitstop(tempo_real_pausa: float) -> void:
 	if em_hitstop:
